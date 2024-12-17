@@ -1,4 +1,4 @@
-package generator
+package api
 
 import (
 	"github.com/gin-gonic/gin"
@@ -9,7 +9,7 @@ type GeneratorRouter struct {
 	router   *gin.Engine
 }
 
-func NewGeneratorRouter(h *GeneratorHandler, e *gin.Engine) *GeneratorRouter {
+func NewGeneratorRouter(h *GeneratorHandler) *GeneratorRouter {
 	r := GeneratorRouter{handlers: h, router: gin.Default()}
 	r.router.POST("/dummy", r.handlers.GetDummyFile)
 	return &r
