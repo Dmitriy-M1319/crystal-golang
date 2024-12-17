@@ -12,6 +12,10 @@ type GeneratorRouter struct {
 func NewGeneratorRouter(h *GeneratorHandler) *GeneratorRouter {
 	r := GeneratorRouter{handlers: h, router: gin.Default()}
 	r.router.POST("/dummy", r.handlers.GetDummyFile)
+	r.router.POST("/report", r.handlers.GenerateReport)
+	r.router.GET("/file", r.handlers.GetFileById)
+	r.router.GET("/files", r.handlers.GetFilesListByPeriod)
+	r.router.DELETE("/files", r.handlers.DeleteFileById)
 	return &r
 }
 

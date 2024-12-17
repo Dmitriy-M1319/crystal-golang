@@ -1,4 +1,4 @@
-package baseapp
+package internal
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 var currentDb string
 
 func NewConnection(ip, user, password, database string) (*sqlx.DB, error) {
-	connString := fmt.Sprintf("postgres://%s:%s@%s:5432/%s", user, password, ip, database)
+	connString := fmt.Sprintf("postgres://%s:%s@%s:5434/%s", user, password, ip, database)
 	log.Println(connString)
 	conn, err := sqlx.Connect("pgx", connString)
 	if err != nil {
