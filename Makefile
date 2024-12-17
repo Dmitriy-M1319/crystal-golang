@@ -1,7 +1,5 @@
-.PHONY: run-base run-rep-gen
+.PHONY: run
 
-run-base:
-	go run cmd/crystal-golang/base-app/main.go
+run:
+	go run cmd/crystal-golang/main.go
 
-run-rep-gen:
-	go run cmd/crystal-golang/rep-gen-app/main.go
