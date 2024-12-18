@@ -23,6 +23,10 @@ type generationBody struct {
 	To   string `json:"to"`
 }
 
+type fileId struct {
+	ID uint64 `uri:"id" binding:"required"`
+}
+
 func NewGeneratorHandler(s *generator.GeneratorService, o *baseapp.OrderService) *GeneratorHandler {
 	return &GeneratorHandler{service: s, ordService: o, settings: config.GetSettings()}
 }
@@ -56,7 +60,6 @@ func (h *GeneratorHandler) GenerateReport(c *gin.Context) {
 		}
 	}
 
-	// TODO: Сделать обработку всех возможных ошибок в самом запросе
 	var body generationBody
 	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -84,7 +87,13 @@ func (h *GeneratorHandler) GenerateReport(c *gin.Context) {
 }
 
 func (h *GeneratorHandler) GetFileById(c *gin.Context) {
-	file, err := h.service.GetFileById(c.GetUint64("id"))
+	var id fileId
+	if err := c.ShouldBindUri(&id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	file, err := h.service.GetFileById(id.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -94,7 +103,31 @@ func (h *GeneratorHandler) GetFileById(c *gin.Context) {
 }
 
 func (h *GeneratorHandler) GetFilesListByPeriod(c *gin.Context) {
-	files, err := h.service.GetFileListByPeriod(c.GetTime("from"), c.GetTime("to"))
+
+	from_str, ok := c.GetQuery("from")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": `"from" field not found`})
+		return
+	}
+
+	to_str, ok := c.GetQuery("to")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": `"to" field not found`})
+		return
+	}
+
+	from, err := time.Parse("2006-01-02", from_str)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	to, err := time.Parse("2006-01-02", to_str)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	files, err := h.service.GetFileListByPeriod(from, to)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -106,7 +139,13 @@ func (h *GeneratorHandler) GetFilesListByPeriod(c *gin.Context) {
 }
 
 func (h *GeneratorHandler) DeleteFileById(c *gin.Context) {
-	err := h.service.DeleteFileById(c.GetUint64("id"), h.settings.Storage)
+	var id fileId
+	if err := c.ShouldBindUri(&id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := h.service.DeleteFileById(id.ID, h.settings.Storage)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

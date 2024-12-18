@@ -4,6 +4,6 @@ import "time"
 
 type XlsxFile struct {
 	ID        uint64
-	CreatedAt time.Time
+	CreatedAt time.Time `db:"created_at"`
 	Filename  string
 }

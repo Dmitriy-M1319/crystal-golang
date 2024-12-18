@@ -206,7 +206,7 @@ func (g *GeneratorService) GenerateNewReport(path string, from, to time.Time) (s
 	filename := "Report_" + now.Format("2006-01-02") + ".xlsx"
 	xlsxFile := XlsxFile{CreatedAt: now, Filename: filename}
 
-	// TODO: Сделать создание базы данных для файлов и миграцию к ней
+	// TODO: Сделать миграцию к бд
 	err := g.repository.InsertFile(&xlsxFile)
 	if err != nil {
 		return "", err

@@ -18,14 +18,24 @@ type XlsxFileRepository struct {
 	db *sqlx.DB
 }
 
-func NewXlsxFileRepository(db *sqlx.DB) *XlsxFileRepository {
-	return &XlsxFileRepository{db: db}
+func NewXlsxFileRepository(db *sqlx.DB) (*XlsxFileRepository, error) {
+	query := `CREATE TABLE IF NOT EXISTS files(
+		id serial primary key,
+		created_at timestamp,
+		filename varchar(255)
+		)`
+
+	_, err := db.Exec(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to init files repository: %s", err.Error())
+	}
+	return &XlsxFileRepository{db: db}, nil
 }
 
 func (r XlsxFileRepository) InsertFile(f *XlsxFile) error {
 	var newId uint64
 	err := r.db.Get(&newId,
-		"INSERT INTO files(created_at, file_name) VALUES($1, $2) RETURNING id",
+		"INSERT INTO files(created_at, filename) VALUES($1, $2) RETURNING id",
 		f.CreatedAt, f.Filename)
 	if err != nil {
 		return fmt.Errorf("failed to insert new file report: %s", err.Error())

@@ -44,7 +44,10 @@ func main() {
 	pRepo = baseapp.NewSqlProductRepository(baseDb)
 	ordService := baseapp.NewOrderService(uRepo, oRepo, pRepo)
 
-	fRepo = generator.NewXlsxFileRepository(fileDb)
+	fRepo, err = generator.NewXlsxFileRepository(fileDb)
+	if err != nil {
+		log.Fatal(err)
+	}
 	service := generator.NewGeneratorService(fRepo, ordService)
 	handler := api.NewGeneratorHandler(service, ordService)
 	router := api.NewGeneratorRouter(handler)

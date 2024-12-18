@@ -13,9 +13,9 @@ func NewGeneratorRouter(h *GeneratorHandler) *GeneratorRouter {
 	r := GeneratorRouter{handlers: h, router: gin.Default()}
 	r.router.POST("/report", r.handlers.GenerateReport)
 	r.router.POST("/dummy", r.handlers.GetDummyFile)
-	r.router.GET("/file", r.handlers.GetFileById)
+	r.router.GET("/files/:id", r.handlers.GetFileById)
 	r.router.GET("/files", r.handlers.GetFilesListByPeriod)
-	r.router.DELETE("/files", r.handlers.DeleteFileById)
+	r.router.DELETE("/files/:id", r.handlers.DeleteFileById)
 	return &r
 }
 
