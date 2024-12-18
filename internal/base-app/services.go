@@ -42,7 +42,7 @@ func (s *OrderService) GetOrdersInfo(from time.Time, to time.Time) ([]OrderWithP
 			counts = append(counts, count)
 		}
 
-		result = append(result, OrderWithProducts{order: order, products: products, user: client, counts: counts})
+		result = append(result, OrderWithProducts{Order: order, Products: products, User: client, Counts: counts})
 	}
 
 	return result, nil

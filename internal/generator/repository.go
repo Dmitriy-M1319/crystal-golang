@@ -28,7 +28,7 @@ func (r XlsxFileRepository) InsertFile(f *XlsxFile) error {
 		"INSERT INTO files(created_at, file_name) VALUES($1, $2) RETURNING id",
 		f.CreatedAt, f.Filename)
 	if err != nil {
-		return fmt.Errorf("failed to insert new file report")
+		return fmt.Errorf("failed to insert new file report: %s", err.Error())
 	}
 	f.ID = newId
 	return nil

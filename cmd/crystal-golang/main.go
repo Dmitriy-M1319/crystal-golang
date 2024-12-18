@@ -45,7 +45,7 @@ func main() {
 	ordService := baseapp.NewOrderService(uRepo, oRepo, pRepo)
 
 	fRepo = generator.NewXlsxFileRepository(fileDb)
-	service := generator.NewGeneratorService(fRepo)
+	service := generator.NewGeneratorService(fRepo, ordService)
 	handler := api.NewGeneratorHandler(service, ordService)
 	router := api.NewGeneratorRouter(handler)
 	router.Run(":8080")

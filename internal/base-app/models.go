@@ -7,35 +7,35 @@ type User struct {
 	Name     string
 	Surname  string
 	Email    string
-	Phone    string
+	Phone    string `db:"phone_number"`
 	Password string
-	IsAdmin  bool
+	IsAdmin  bool `db:"is_admin"`
 }
 
 type Product struct {
 	ID            uint64
-	Name          string
+	Name          string `db:"product_name"`
 	Company       string
-	ClientPrice   float64
-	PurchasePrice float64
+	ClientPrice   float64 `db:"client_price"`
+	PurchasePrice float64 `db:"purchase_price"`
 	Count         int32
 }
 
 type Order struct {
 	ID          uint64
-	ClientID    uint64
-	TotalPrice  float64
+	ClientID    uint64  `db:"client_id"`
+	TotalPrice  float64 `db:"total_price"`
 	Address     string
-	IsDelivery  bool
-	PaymentType string
-	Status      bool
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	IsDelivery  bool      `db:"is_delivery"`
+	PaymentType string    `db:"payment_type"`
+	Status      bool      `db:"order_status"`
+	CreatedAt   time.Time `db:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at"`
 }
 
 type OrderWithProducts struct {
-	order    Order
-	user     User
-	products []Product
-	counts   []int32
+	Order    Order
+	User     User
+	Products []Product
+	Counts   []int32
 }
