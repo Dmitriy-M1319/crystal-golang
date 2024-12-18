@@ -27,16 +27,18 @@ func LoadSettings(env string) error {
 		}
 
 		baseDb := make(map[string]string)
-		baseDb["base_ip"] = os.Getenv("BASE_POSTGRES_IP")
-		baseDb["base_user"] = os.Getenv("BASE_POSTGRES_USER")
-		baseDb["base_password"] = os.Getenv("BASE_POSTGRES_PASSWORD")
-		baseDb["base_database"] = os.Getenv("BASE_POSTGRES_DATABASE")
+		baseDb["ip"] = os.Getenv("BASE_POSTGRES_IP")
+		baseDb["port"] = os.Getenv("BASE_POSTGRES_PORT")
+		baseDb["user"] = os.Getenv("BASE_POSTGRES_USER")
+		baseDb["password"] = os.Getenv("BASE_POSTGRES_PASSWORD")
+		baseDb["database"] = os.Getenv("BASE_POSTGRES_DATABASE")
 
 		fileDb := make(map[string]string)
-		fileDb["file_ip"] = os.Getenv("FILE_POSTGRES_IP")
-		fileDb["file_user"] = os.Getenv("FILE_POSTGRES_USER")
-		fileDb["file_password"] = os.Getenv("FILE_POSTGRES_PASSWORD")
-		fileDb["file_database"] = os.Getenv("FILE_POSTGRES_DATABASE")
+		fileDb["ip"] = os.Getenv("FILE_POSTGRES_IP")
+		fileDb["port"] = os.Getenv("FILE_POSTGRES_PORT")
+		fileDb["user"] = os.Getenv("FILE_POSTGRES_USER")
+		fileDb["password"] = os.Getenv("FILE_POSTGRES_PASSWORD")
+		fileDb["database"] = os.Getenv("FILE_POSTGRES_DATABASE")
 		settings = &Settings{BaseDB: baseDb, FileDB: fileDb, Storage: os.Getenv("FILE_STORAGE")}
 	})
 

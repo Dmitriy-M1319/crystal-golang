@@ -1,24 +1,38 @@
 version: "3.8"
 
 services:
-  postgres:
+  postgres_crystal:
     image: postgres
-    container_name: postgres
+    container_name: postgres_crystal
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
-      PGDATA: /data/postgres
+      POSTGRES_USER: ${BASE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${BASE_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${BASE_POSTGRES_DATABASE}
     volumes:
-      - ./postgres:/data/postgres
+      - crystal_data:/var/lib/postgresql/data
     ports:
-      - 5434:5432
+      - 5432:5432
     networks:
       - postgresql
     restart: unless-stopped
 
-  pgadmin:
-    container_name: pgadmin
+  postgres_files:
+    image: postgres
+    container_name: postgres_files
+    environment:
+      POSTGRES_USER: ${FILE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${FILE_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${FILE_POSTGRES_DATABASE}
+    volumes:
+      - files_data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    networks:
+      - postgresql
+    restart: unless-stopped
+
+  pgadmin_crystal:
+    container_name: pgadmin_crystal
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
@@ -37,5 +51,6 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
+  crystal_data:
+  files_data:
   pgadmin:

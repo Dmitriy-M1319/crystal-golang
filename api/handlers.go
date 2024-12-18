@@ -5,17 +5,19 @@ import (
 	"os"
 
 	"github.com/Dmitriy-M1319/crystal-golang/config"
+	baseapp "github.com/Dmitriy-M1319/crystal-golang/internal/base-app"
 	"github.com/Dmitriy-M1319/crystal-golang/internal/generator"
 	"github.com/gin-gonic/gin"
 )
 
 type GeneratorHandler struct {
-	service  *generator.GeneratorService
-	settings *config.Settings
+	service    *generator.GeneratorService
+	ordService *baseapp.OrderService
+	settings   *config.Settings
 }
 
-func NewGeneratorHandler(s *generator.GeneratorService) *GeneratorHandler {
-	return &GeneratorHandler{service: s, settings: config.GetSettings()}
+func NewGeneratorHandler(s *generator.GeneratorService, o *baseapp.OrderService) *GeneratorHandler {
+	return &GeneratorHandler{service: s, ordService: o, settings: config.GetSettings()}
 }
 
 func (h *GeneratorHandler) GetDummyFile(c *gin.Context) {

@@ -7,8 +7,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-//const dateTemplate = "2006-01-02:15:04:05"
-
 type IFileRepository interface {
 	InsertFile(f *XlsxFile) error
 	GetFilesForPeriod(from time.Time, to time.Time) ([]XlsxFile, error)

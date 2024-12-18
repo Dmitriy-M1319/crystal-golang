@@ -6,10 +6,14 @@ import (
 	"github.com/Dmitriy-M1319/crystal-golang/api"
 	"github.com/Dmitriy-M1319/crystal-golang/config"
 	"github.com/Dmitriy-M1319/crystal-golang/internal"
+	baseapp "github.com/Dmitriy-M1319/crystal-golang/internal/base-app"
 	"github.com/Dmitriy-M1319/crystal-golang/internal/generator"
 )
 
-var repo generator.IFileRepository
+var fRepo generator.IFileRepository
+var uRepo baseapp.IUserRepository
+var oRepo baseapp.IOrderRepository
+var pRepo baseapp.IProductRepository
 
 func main() {
 	err := config.LoadSettings(".env")
@@ -20,17 +24,29 @@ func main() {
 
 	settings := config.GetSettings()
 
-	db, err := internal.NewConnection(settings.FileDB["file_ip"], settings.FileDB["file_user"],
-		settings.FileDB["file_password"], settings.FileDB["file_database"])
+	fileDb, err := internal.NewConnection(settings.FileDB["ip"], settings.FileDB["port"], settings.FileDB["user"],
+		settings.FileDB["password"], settings.FileDB["database"])
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	defer internal.Close(db)
+	defer internal.Close(fileDb)
+	baseDb, err := internal.NewConnection(settings.BaseDB["ip"], settings.BaseDB["port"], settings.BaseDB["user"],
+		settings.BaseDB["password"], settings.BaseDB["database"])
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	defer internal.Close(baseDb)
 
-	repo = generator.NewXlsxFileRepository(db)
-	service := generator.NewGeneratorService(repo)
-	handler := api.NewGeneratorHandler(service)
+	uRepo = baseapp.NewSqlUserRepository(baseDb)
+	oRepo = baseapp.NewSqlOrderRepository(baseDb)
+	pRepo = baseapp.NewSqlProductRepository(baseDb)
+	ordService := baseapp.NewOrderService(uRepo, oRepo, pRepo)
+
+	fRepo = generator.NewXlsxFileRepository(fileDb)
+	service := generator.NewGeneratorService(fRepo)
+	handler := api.NewGeneratorHandler(service, ordService)
 	router := api.NewGeneratorRouter(handler)
 	router.Run(":8080")
 }
