@@ -12,11 +12,13 @@ import (
 var repo generator.IFileRepository
 
 func main() {
-	settings, err := config.GetSettings(".env")
+	err := config.LoadSettings(".env")
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
+
+	settings := config.GetSettings()
 
 	db, err := internal.NewConnection(settings.FileDB["file_ip"], settings.FileDB["file_user"],
 		settings.FileDB["file_password"], settings.FileDB["file_database"])
@@ -28,7 +30,7 @@ func main() {
 
 	repo = generator.NewXlsxFileRepository(db)
 	service := generator.NewGeneratorService(repo)
-	handler := api.NewGeneratorHandler(service, settings)
+	handler := api.NewGeneratorHandler(service)
 	router := api.NewGeneratorRouter(handler)
 	router.Run(":8080")
 }

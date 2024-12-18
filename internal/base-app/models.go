@@ -1,5 +1,7 @@
 package baseapp
 
+import "time"
+
 type User struct {
 	ID       uint64
 	Name     string
@@ -27,13 +29,13 @@ type Order struct {
 	IsDelivery  bool
 	PaymentType string
 	Status      bool
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
-type ProductApplication struct {
-	ID        uint64
-	ProductId uint64
-	Count     int32
-	Provider  string
-	Price     float64
-	Status    bool
+type OrderWithProducts struct {
+	order    Order
+	user     User
+	products []Product
+	counts   []int32
 }

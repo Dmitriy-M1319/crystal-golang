@@ -14,8 +14,8 @@ type GeneratorHandler struct {
 	settings *config.Settings
 }
 
-func NewGeneratorHandler(s *generator.GeneratorService, set *config.Settings) *GeneratorHandler {
-	return &GeneratorHandler{service: s, settings: set}
+func NewGeneratorHandler(s *generator.GeneratorService) *GeneratorHandler {
+	return &GeneratorHandler{service: s, settings: config.GetSettings()}
 }
 
 func (h *GeneratorHandler) GetDummyFile(c *gin.Context) {
