@@ -95,7 +95,13 @@ func (h *GeneratorHandler) GetFileById(c *gin.Context) {
 
 	file, err := h.service.GetFileById(id.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err = os.Stat(h.settings.Storage + "/" + file)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such file on disk"})
 		return
 	}
 
@@ -129,7 +135,7 @@ func (h *GeneratorHandler) GetFilesListByPeriod(c *gin.Context) {
 
 	files, err := h.service.GetFileListByPeriod(from, to)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -147,7 +153,7 @@ func (h *GeneratorHandler) DeleteFileById(c *gin.Context) {
 
 	err := h.service.DeleteFileById(id.ID, h.settings.Storage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
